@@ -1,24 +1,30 @@
 // src/App.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer-continued';
 
 import 'tailwindcss/tailwind.css'; // Import Tailwind CSS
 
-
 const App = () => {
   const [text1, setText1] = useState('');
   const [text2, setText2] = useState('');
   const [differences, setDifferences] = useState('');
+  const [isCompared, setIsCompared] = useState(false)
 
   const compareTexts = async () => {
     try {
       const response = await axios.post('http://localhost:3001/compare', { text1, text2 });
       setDifferences(response.data.differences);
+      setIsCompared(true);
     } catch (error) {
       console.error('Error comparing texts:', error);
+      setDifferences('')
     }
   };
+
+  useEffect(() => {
+    setIsCompared(false);
+  }, [text1, text2])
 
   return (
     <div className="container mx-auto p-4">
@@ -50,15 +56,17 @@ const App = () => {
         />
       </div>
       
-      <div className="mt-4">
-        <h2 className="text-xl font-bold text-center">Differences:</h2>
-        <ReactDiffViewer
-          oldValue={text1}
-          newValue={text2}
-          splitView={true}
-          compareMethod={DiffMethod.CHARS}
-        />
-      </div>
+      { isCompared && differences && (
+        <div className="mt-4">
+          <h2 className="text-xl font-bold text-center">Differences:</h2>
+          <ReactDiffViewer
+            oldValue={text1}
+            newValue={text2}
+            splitView={true}
+            compareMethod={DiffMethod.CHARS}
+          />
+        </div>
+      )}
     </div>
   );
 };
