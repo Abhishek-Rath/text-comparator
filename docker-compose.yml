@@ -1,0 +1,15 @@
+version : '3'
+services:
+  text-comparator-client:
+    build:
+      context: ./text-comparator-client
+    ports:
+      - "3000:3000"
+    depends_on:
+      - text-comparator-server
+    
+  text-comparator-server:
+    build:
+      context: ./text-comparator-server
+    ports:
+      - "3001:3001"
