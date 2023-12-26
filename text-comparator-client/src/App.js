@@ -1,8 +1,10 @@
 // src/App.js
 import React, { useState } from 'react';
 import axios from 'axios';
+import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer-continued';
 
 import 'tailwindcss/tailwind.css'; // Import Tailwind CSS
+
 
 const App = () => {
   const [text1, setText1] = useState('');
@@ -50,10 +52,12 @@ const App = () => {
       
       <div className="mt-4">
         <h2 className="text-xl font-bold text-center">Differences:</h2>
-        <div
-          className="mt-2 bg-gray-200 p-2 border rounded"
-          dangerouslySetInnerHTML={{ __html: differences }}
-        ></div>
+        <ReactDiffViewer
+          oldValue={text1}
+          newValue={text2}
+          splitView={true}
+          compareMethod={DiffMethod.CHARS}
+        />
       </div>
     </div>
   );
